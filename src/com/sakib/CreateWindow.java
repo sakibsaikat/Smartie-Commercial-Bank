@@ -72,7 +72,9 @@ public class CreateWindow {
         cross.add(crossed);
         panel.add(cross);
 
-        mainpanel.setBorder(BorderFactory.createMatteBorder(0,0,2,0,new Color(220,20,60)));
+        mainpanel.setBorder(BorderFactory.createMatteBorder(0,1,2,1,new Color(220,20,60)));
+        panel.setBorder(BorderFactory.createMatteBorder(1,1,0,1,new Color(220,20,60)));
+        cross.setBorder(BorderFactory.createMatteBorder(1,0,0,1,new Color(220,20,60)));
 
         mainpanel.add(panel);
 

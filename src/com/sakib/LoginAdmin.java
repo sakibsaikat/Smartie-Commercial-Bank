@@ -76,9 +76,11 @@ public class LoginAdmin {
 
                     if(logStatus!=0){
                         if(logStatus==1){
+                            ob1.frame.setVisible(false);
                             AdminDashboard obA = new AdminDashboard(Identity_ID,login_id);
                             obA.loadAdminDashboard();
                         }else if(logStatus==2){
+                            ob1.frame.setVisible(false);
                             EmployeeDashboard ob = new EmployeeDashboard(Identity_ID,login_id);
                             ob.loadAdminDashboard();
                         }

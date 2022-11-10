@@ -106,6 +106,7 @@ public class UserDashboard {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dashWindow.frame.setVisible(false);
+                System.exit(0);
                 LoginUser ob =  new LoginUser();
                 ob.loadUserLogin();
             }

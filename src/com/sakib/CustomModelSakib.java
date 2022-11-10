@@ -39,10 +39,11 @@ public class CustomModelSakib {
 
     CustomModelSakib(){
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\Farzana\\IdeaProjects\\Banking_System\\src\\fonts\\CAMPUS PERSONAL USE.ttf")).deriveFont(16f);
-            customFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\Farzana\\IdeaProjects\\Banking_System\\src\\fonts\\Sunday Best ttf.ttf")).deriveFont(10f);
-            customFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\Farzana\\IdeaProjects\\Banking_System\\src\\fonts\\YanoneKaffeesatz-Bold.ttf")).deriveFont(24f);
-            customFont4 = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\Farzana\\IdeaProjects\\Banking_System\\src\\fonts\\Bleeding_Cowboys.ttf")).deriveFont(24f);
+            String dir = System.getProperty("user.dir");
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File(dir+"\\src\\fonts\\CAMPUS PERSONAL USE.ttf")).deriveFont(16f);
+            customFont2 = Font.createFont(Font.TRUETYPE_FONT, new File(dir+"\\src\\fonts\\Sunday Best ttf.ttf")).deriveFont(10f);
+            customFont3 = Font.createFont(Font.TRUETYPE_FONT, new File(dir+"\\src\\fonts\\YanoneKaffeesatz-Bold.ttf")).deriveFont(24f);
+            customFont4 = Font.createFont(Font.TRUETYPE_FONT, new File(dir+"\\src\\fonts\\Bleeding_Cowboys.ttf")).deriveFont(24f);
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);

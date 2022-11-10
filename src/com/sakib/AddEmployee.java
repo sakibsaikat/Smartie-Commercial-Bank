@@ -195,7 +195,7 @@ public class AddEmployee {
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
-                        JOptionPane.showMessageDialog(null,"Wait for the admin approval. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"ID is Created. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
 
                     }
 
