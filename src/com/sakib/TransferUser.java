@@ -11,11 +11,13 @@ public class TransferUser {
 
 
         int user_id,login_id,user_account_no;
+        JFrame prevframe;
 
-        TransferUser(int id,int log_id){
+        TransferUser(int id,int log_id,JFrame frame){
             CustomModelSakib ob = new CustomModelSakib();
             user_id=id;
             login_id=log_id;
+            prevframe=frame;
 
             String accQuery = "Select * FROM accounts WHERE User_ID='"+user_id+"'";
             ResultSet rz = ob.GetData(accQuery);
@@ -34,8 +36,7 @@ public class TransferUser {
         int startTransaction=55316460;
 
         public static void main(String[] args) {
-            com.sakib.WithdrawUser ob = new com.sakib.WithdrawUser(1,1);
-            ob.loadWithdraw();
+
         }
 
         public void loadTransfer(){
@@ -148,6 +149,7 @@ public class TransferUser {
                                     ResultSet rz4 = ob1.GetData(Query);
 
                                     dashWindow.frame.setVisible(false);
+                                    prevframe.setVisible(false);
                                     UserDashboard ob = new UserDashboard(user_id,login_id);
                                     ob.loadUserDashboard();
 

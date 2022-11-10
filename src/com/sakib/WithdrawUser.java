@@ -10,11 +10,13 @@ import java.sql.SQLException;
 public class WithdrawUser {
 
         int user_id,login_id,user_account_no;
+        JFrame prevframe;
 
-        WithdrawUser(int id,int log_id){
+        WithdrawUser(int id,int log_id,JFrame frame){
             CustomModelSakib ob = new CustomModelSakib();
             user_id=id;
             login_id=log_id;
+            prevframe=frame;
 
             String accQuery = "Select * FROM accounts WHERE User_ID='"+user_id+"'";
             ResultSet rz = ob.GetData(accQuery);
@@ -33,8 +35,7 @@ public class WithdrawUser {
         int startTransaction=55316460;
 
         public static void main(String[] args) {
-            WithdrawUser ob = new WithdrawUser(1,1);
-            ob.loadWithdraw();
+
         }
 
         public void loadWithdraw(){
@@ -124,6 +125,7 @@ public class WithdrawUser {
                                     ResultSet rz3 = ob1.GetData(Query);
 
                                     dashWindow.frame.setVisible(false);
+                                    prevframe.setVisible(false);
                                     UserDashboard obx = new UserDashboard(user_id,login_id);
                                     obx.loadUserDashboard();
                                 }

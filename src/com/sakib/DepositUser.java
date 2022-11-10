@@ -9,11 +9,13 @@ import java.sql.SQLException;
 
 public class DepositUser {
         int user_id,login_id,user_account_no;
+        JFrame prevframe;
 
-        DepositUser(int id,int log_id){
+        DepositUser(int id,int log_id,JFrame frame){
             CustomModelSakib ob = new CustomModelSakib();
             user_id=id;
             login_id=log_id;
+            prevframe=frame;
 
             String accQuery = "Select * FROM accounts WHERE User_ID='"+user_id+"'";
             ResultSet rz = ob.GetData(accQuery);
@@ -32,8 +34,7 @@ public class DepositUser {
         int startTransaction=55316460;
 
         public static void main(String[] args) {
-            DepositUser ob = new DepositUser(1,1);
-            ob.loadDeposit();
+
         }
 
         public void loadDeposit(){
@@ -119,6 +120,7 @@ public class DepositUser {
                                     ResultSet rz3 = ob1.GetData(Query);
 
                                     dashWindow.frame.setVisible(false);
+                                    prevframe.setVisible(false);
                                     UserDashboard obx = new UserDashboard(user_id,login_id);
                                     obx.loadUserDashboard();
                                 }

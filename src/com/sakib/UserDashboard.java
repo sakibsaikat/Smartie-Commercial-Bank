@@ -106,7 +106,6 @@ public class UserDashboard {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dashWindow.frame.setVisible(false);
-                System.exit(0);
                 LoginUser ob =  new LoginUser();
                 ob.loadUserLogin();
             }
@@ -199,7 +198,7 @@ public class UserDashboard {
         ob2.hpanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                DepositUser ob = new DepositUser(User_ID,Login_IDS);
+                DepositUser ob = new DepositUser(User_ID,Login_IDS,dashWindow.frame);
                 ob.loadDeposit();
             }
         });
@@ -207,7 +206,7 @@ public class UserDashboard {
         ob3.hpanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                WithdrawUser ob = new WithdrawUser(User_ID,Login_IDS);
+                WithdrawUser ob = new WithdrawUser(User_ID,Login_IDS,dashWindow.frame);
                 ob.loadWithdraw();
             }
         });
@@ -215,7 +214,7 @@ public class UserDashboard {
         ob4.hpanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TransferUser ob = new TransferUser(User_ID,Login_IDS);
+                TransferUser ob = new TransferUser(User_ID,Login_IDS,dashWindow.frame);
                 ob.loadTransfer();
             }
         });
