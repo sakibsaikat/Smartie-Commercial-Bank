@@ -12,6 +12,7 @@ import java.sql.SQLException;
 public class AdminDashboard {
 
         String admin_name,profile_pic;
+        String total_trans;
         int admin_id,login_Id;
 
         AdminDashboard(int Identity_ID,int log_id){
@@ -23,8 +24,12 @@ public class AdminDashboard {
             String query = "SELECT * FROM admin where Admin_ID='"+admin_id+"'";
             String query2 = "SELECT * FROM login where Login_ID='"+log_id+"'";
 
+
+
             ResultSet rzm = ob.GetData(query);
             ResultSet rzm2 = ob.GetData(query2);
+            ResultSet rzm3 = ob.GetData("SELECT COUNT(*) AS COUNT FROM transaction");
+
 
             try{
                 while(rzm.next()){
@@ -32,6 +37,9 @@ public class AdminDashboard {
                 }
                 while(rzm2.next()){
                     profile_pic = rzm2.getString("Profile_Picture");
+                }
+                while(rzm3.next()){
+                    total_trans = rzm3.getString("COUNT");
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -135,7 +143,7 @@ public class AdminDashboard {
 
             ob7.CreatePanel(550,80,200,120);
             ob7.panel.setBackground(DashBoradCardColor);
-            ob7.CreateLabel(20,0,150,50,"10     Transactions",ob1.customFont);
+            ob7.CreateLabel(20,0,150,50,total_trans+"     Transactions",ob1.customFont);
             ob7.label.setFont(new Font("Helvetica",Font.BOLD,14));
             ob7.label.setForeground(Color.WHITE);
             ob8.CreateLabel(20,70,150,50,"Total Transactions",ob1.customFont2);

@@ -109,6 +109,63 @@ public class PendingAccounts {
                 }
             });
 
+            ob4.CreateButtonColors(570,90,120,35,"Delete Request",new Color(255, 87, 51));
+            ob4.button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String searchKey = ob1.textField.getText();
+                    if(!searchKey.equals("")){
+
+                        int user_id=0;
+                        int delete_id = Integer.valueOf(searchKey);
+                        ResultSet rz = ob1.GetData("SELECT * from accounts WHERE Account_No='"+delete_id+"'");
+                        String del_name="";
+
+                        try {
+                            while(rz.next()){
+                                user_id =  Integer.valueOf(rz.getString("User_ID"));
+                            }
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                        ResultSet rz2 = ob1.GetData("SELECT * from user WHERE User_ID='"+user_id+"'");
+
+                        try {
+                            while(rz2.next()){
+                                del_name = rz2.getString("name");
+                            }
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                        int check = JOptionPane.showConfirmDialog(null,"Are you sure to delete the Requested account  - "+del_name,"Confirm Deletion",JOptionPane.YES_NO_OPTION);
+                        System.out.println(check);
+                        if(check==0){
+                            int delReqStatus = ob1.SendData("DELETE FROM accounts WHERE Account_No='"+delete_id+"'");
+                            int delReqLoginStatus = ob1.SendData("DELETE FROM login WHERE Identity_ID='"+user_id+"'");
+                            int delReqUserStatus = ob1.SendData("DELETE FROM user WHERE User_ID='"+user_id+"'");
+
+                            if(delReqStatus==1 && delReqLoginStatus==1 && delReqUserStatus==1){
+                                JOptionPane.showMessageDialog(null,"Successfully Deleted Request","Deletion Successful",JOptionPane.PLAIN_MESSAGE);
+                                dashWindow.frame.setVisible(false);
+                                PendingAccounts obx = new PendingAccounts();
+                                obx.loadAccounts();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"Can't Delete Account","Deletion Unsuccessful",JOptionPane.ERROR_MESSAGE);
+
+                            }
+                        }
+
+
+
+                    }else{
+                        JOptionPane.showMessageDialog(null,"No Account No. is selected","Alert Message",JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            });
+
 
             String Query = "SELECT Account_No,A.User_ID,Name,Gender,Contact,Status FROM accounts as A,user as U,login as l WHERE A.User_ID=U.User_ID AND A.User_ID=l.Identity_ID AND l.Status='pending'";
             ResultSet rz = ob1.GetData(Query);
@@ -121,6 +178,7 @@ public class PendingAccounts {
             dashWindow.mainpanel.add(ob1.textField);
             dashWindow.mainpanel.add(ob1.button);
             dashWindow.mainpanel.add(ob2.button);
+            dashWindow.mainpanel.add(ob4.button);
 
 
             JLabel titleLabel = new JLabel("Smartie Commercial Bank");

@@ -134,8 +134,6 @@ public class AddEmployee {
                     String password = ob4.textField.getText();
                     String contact = ob5.textField.getText();
 
-
-
                     String gender="";
                     if(button1.isSelected()){
                         gender = "Male";
@@ -146,61 +144,78 @@ public class AddEmployee {
 
 
 
-                    String dir = System.getProperty("user.dir");
-                    String saveDir = dir+"\\src\\uploads\\";
+                    ValidatorSakib obv = new ValidatorSakib();
+                    if(obv.isValidName(full_name)==1 && !full_name.isEmpty() && !password.isEmpty() && !gender.equals("")){
+                        if(obv.isValidEmail(email)==1){
+                            if(obv.isValidContact(contact)==1){
 
-                    File sourcefile = new File(filename);
-                    File destfile =new File(saveDir+contact+f.getName());
 
-                    String profile_pic = contact+f.getName();
+                                String dir = System.getProperty("user.dir");
+                                String saveDir = dir+"\\src\\uploads\\";
 
-                    int countEmp=0;
-                    int countLogin=0;
+                                File sourcefile = new File(filename);
+                                File destfile =new File(saveDir+contact+f.getName());
 
-                    ResultSet rzy = ob2.GetData("select employee from count_table where count_id=1");
-                    ResultSet rzz = ob2.GetData("select login from count_table where count_id=1");
-                    try{
+                                String profile_pic = contact+f.getName();
 
-                        while(rzy.next()){
-                            String val = rzy.getString("employee").toString();
-                            countEmp=Integer.valueOf(val);
+                                int countEmp=0;
+                                int countLogin=0;
+
+                                ResultSet rzy = ob2.GetData("select employee from count_table where count_id=1");
+                                ResultSet rzz = ob2.GetData("select login from count_table where count_id=1");
+                                try{
+
+                                    while(rzy.next()){
+                                        String val = rzy.getString("employee").toString();
+                                        countEmp=Integer.valueOf(val);
+                                    }
+                                    while(rzz.next()){
+                                        String val = rzz.getString("login").toString();
+                                        countLogin=Integer.valueOf(val);
+                                    }
+                                } catch (SQLException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+
+                                String address = ob9.textField.getText();
+                                int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
+
+                                String UserQuery = "INSERT INTO employee (Employee_ID,Name,Gender,Contact,Address) VALUES('"+(startEmployee+countEmp)+"','"+full_name+"','"+gender+"','"+contact+"','"+address+"')";
+
+                                UserInfoSendStatus = ob2.SendData(UserQuery);
+                                String pending = "Approved";
+
+                                String LoginQuery = "INSERT INTO login (Login_ID,Identity_ID,Role_ID,Username,Password,Profile_picture,Status) VALUES('"+(startLogin+countLogin)+"','"+(startEmployee+countEmp)+"',2,'"+email+"','"+password+"','"+profile_pic+"','"+pending+"')";
+                                LoginInfoSendStatus = ob2.SendData(LoginQuery);
+
+
+                                if(UserInfoSendStatus==1 && LoginInfoSendStatus==1){
+                                    String countQuery="UPDATE count_table SET employee='"+(countEmp+1)+"' WHERE count_id=1";
+                                    String countLogQuery="UPDATE count_table SET login='"+(countLogin+1)+"' WHERE count_id=1";
+                                    int res = ob2.SendData(countQuery);
+                                    int res2 = ob2.SendData(countLogQuery);
+                                    try {
+                                        Files.copy(sourcefile.toPath(),destfile.toPath());
+                                    } catch (IOException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                    JOptionPane.showMessageDialog(null,"ID is Created. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
+
+                                }
+
+
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null,"Enter a Contact Number.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
-                        while(rzz.next()){
-                            String val = rzz.getString("login").toString();
-                            countLogin=Integer.valueOf(val);
+                        else{
+                            JOptionPane.showMessageDialog(null,"Enter a Valid email.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
                         }
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Enter a Valid Name.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
                     }
-
-                    String address = ob9.textField.getText();
-                    int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
-
-                    String UserQuery = "INSERT INTO employee (Employee_ID,Name,Gender,Contact,Address) VALUES('"+(startEmployee+countEmp)+"','"+full_name+"','"+gender+"','"+contact+"','"+address+"')";
-
-                    UserInfoSendStatus = ob2.SendData(UserQuery);
-                    String pending = "Approved";
-
-                    String LoginQuery = "INSERT INTO login (Login_ID,Identity_ID,Role_ID,Username,Password,Profile_picture,Status) VALUES('"+(startLogin+countLogin)+"','"+(startEmployee+countEmp)+"',2,'"+email+"','"+password+"','"+profile_pic+"','"+pending+"')";
-                    LoginInfoSendStatus = ob2.SendData(LoginQuery);
-
-
-                    if(UserInfoSendStatus==1 && LoginInfoSendStatus==1){
-                        String countQuery="UPDATE count_table SET employee='"+(countEmp+1)+"' WHERE count_id=1";
-                        String countLogQuery="UPDATE count_table SET login='"+(countLogin+1)+"' WHERE count_id=1";
-                        int res = ob2.SendData(countQuery);
-                        int res2 = ob2.SendData(countLogQuery);
-                        try {
-                            Files.copy(sourcefile.toPath(),destfile.toPath());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        JOptionPane.showMessageDialog(null,"ID is Created. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
-
-                    }
-
-
-
 
                 }
             });

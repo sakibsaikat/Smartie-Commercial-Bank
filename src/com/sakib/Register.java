@@ -147,89 +147,113 @@ public class Register {
                 String month = ob5.month.getSelectedItem().toString();
                 String year = ob5.year.getSelectedItem().toString();
 
-                String[] months ={"Month","January","February","March","April","May","June","July","August","September","October","November","December"};
+                String[] months = {"Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-                String monthNum="";
-                for(int x=1;x<months.length;x++){
-                    if(months[x]==month){
+                String monthNum = "";
+                for (int x = 1; x < months.length; x++) {
+                    if (months[x] == month) {
                         monthNum = String.valueOf(x);
                     }
                 }
 
-                String date = year+"-"+monthNum+"-"+day;
+                String date = year + "-" + monthNum + "-" + day;
 
-                String gender="";
-                if(button1.isSelected()){
+                String gender = "";
+                if (button1.isSelected()) {
                     gender = "Male";
                 }
-                if(button2.isSelected()){
+                if (button2.isSelected()) {
                     gender = "Female";
                 }
 
-
-
-                String dir = System.getProperty("user.dir");
-                String saveDir = dir+"\\src\\uploads\\";
-
-                File sourcefile = new File(filename);
-                File destfile =new File(saveDir+contact+f.getName());
-
-                String profile_pic = contact+f.getName();
-
-                int min_balance = 2000;
-                int countIndex=0;
-                int countLogin=0;
-
-                ResultSet rzx = ob2.GetData("select user from count_table where count_id=1");
-                ResultSet rzz = ob2.GetData("select login from count_table where count_id=1");
-                try{
-                    while(rzx.next()){
-                        String val = rzx.getString("user").toString();
-                        countIndex=Integer.valueOf(val);
-                    }
-                    while(rzz.next()){
-                        String val = rzz.getString("login").toString();
-                        countLogin=Integer.valueOf(val);
-                    }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-
                 String address = ob9.textField.getText();
-                int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
 
-                String UserQuery = "INSERT INTO user (User_ID,Name,Gender,Contact,Address,DOB) VALUES('"+(startUser+countIndex)+"','"+full_name+"','"+gender+"','"+contact+"','"+address+"','"+date+"')";
+                ValidatorSakib ob = new ValidatorSakib();
 
-                UserInfoSendStatus = ob2.SendData(UserQuery);
-                String pending = "pending";
+                if (ob.isValidName(full_name) == 1 && !full_name.isEmpty() && !address.isEmpty() && !password.isEmpty() && !gender.equals("")) {
+                    if (ob.isValidEmail(email) == 1) {
+                        if (ob.isValidContact(contact) == 1) {
 
-                String LoginQuery = "INSERT INTO login (Login_ID,Identity_ID,Role_ID,Username,Password,Profile_picture,Status) VALUES('"+(startLogin+countLogin)+"','"+(startUser+countIndex)+"',3,'"+email+"','"+password+"','"+profile_pic+"','"+pending+"')";
-                LoginInfoSendStatus = ob2.SendData(LoginQuery);
 
-                String acc_types = "Savings Account";
-                String AccountQuery = "INSERT INTO accounts (Account_No,User_ID,Account_Type,Balance) VALUES('"+(startAccount+countIndex)+"','"+(startUser+countIndex)+"','"+acc_types+"','"+min_balance+"')";
-                AccountInfoSendInfo = ob2.SendData(AccountQuery);
+                            String dir = System.getProperty("user.dir");
+                            String saveDir = dir + "\\src\\uploads\\";
 
-                if(UserInfoSendStatus==1 && LoginInfoSendStatus==1 && AccountInfoSendInfo==1){
+                            File sourcefile = new File(filename);
+                            File destfile = new File(saveDir + contact + f.getName());
 
-                    String countQuery="UPDATE count_table SET user='"+(countIndex+1)+"' WHERE count_id=1";
-                    String countLogQuery="UPDATE count_table SET login='"+(countLogin+1)+"' WHERE count_id=1";
-                    int res = ob2.SendData(countQuery);
-                    int res2 = ob2.SendData(countLogQuery);
+                            String profile_pic = contact + f.getName();
 
-                    try {
-                        Files.copy(sourcefile.toPath(),destfile.toPath());
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                            int min_balance = 2000;
+                            int countIndex = 0;
+                            int countLogin = 0;
+
+                            ResultSet rzx = ob2.GetData("select user from count_table where count_id=1");
+                            ResultSet rzz = ob2.GetData("select login from count_table where count_id=1");
+                            try {
+                                while (rzx.next()) {
+                                    String val = rzx.getString("user").toString();
+                                    countIndex = Integer.valueOf(val);
+                                }
+                                while (rzz.next()) {
+                                    String val = rzz.getString("login").toString();
+                                    countLogin = Integer.valueOf(val);
+                                }
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+
+                            int UserInfoSendStatus = 0, LoginInfoSendStatus = 0, AccountInfoSendInfo = 0;
+
+                            String UserQuery = "INSERT INTO user (User_ID,Name,Gender,Contact,Address,DOB) VALUES('" + (startUser + countIndex) + "','" + full_name + "','" + gender + "','" + contact + "','" + address + "','" + date + "')";
+
+                            UserInfoSendStatus = ob2.SendData(UserQuery);
+                            String pending = "pending";
+
+                            String LoginQuery = "INSERT INTO login (Login_ID,Identity_ID,Role_ID,Username,Password,Profile_picture,Status) VALUES('" + (startLogin + countLogin) + "','" + (startUser + countIndex) + "',3,'" + email + "','" + password + "','" + profile_pic + "','" + pending + "')";
+                            LoginInfoSendStatus = ob2.SendData(LoginQuery);
+
+                            String acc_types = "Savings Account";
+                            String AccountQuery = "INSERT INTO accounts (Account_No,User_ID,Account_Type,Balance) VALUES('" + (startAccount + countIndex) + "','" + (startUser + countIndex) + "','" + acc_types + "','" + min_balance + "')";
+                            AccountInfoSendInfo = ob2.SendData(AccountQuery);
+
+                            if (UserInfoSendStatus == 1 && LoginInfoSendStatus == 1 && AccountInfoSendInfo == 1) {
+
+                                String countQuery = "UPDATE count_table SET user='" + (countIndex + 1) + "' WHERE count_id=1";
+                                String countLogQuery = "UPDATE count_table SET login='" + (countLogin + 1) + "' WHERE count_id=1";
+                                int res = ob2.SendData(countQuery);
+                                int res2 = ob2.SendData(countLogQuery);
+
+                                try {
+                                    Files.copy(sourcefile.toPath(), destfile.toPath());
+                                } catch (IOException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                                JOptionPane.showMessageDialog(null, "Wait for the admin approval. Thank you.", "Your Form is Submitted", JOptionPane.PLAIN_MESSAGE);
+
+                            }
+
+
+                        }
+
+
+                    else {
+                        JOptionPane.showMessageDialog(null, "Enter a Valid Contact Number.", "Suggestion Box", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    JOptionPane.showMessageDialog(null,"Wait for the admin approval. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
+                }else{
+                        JOptionPane.showMessageDialog(null, "Enter a Valid Email..", "Suggestion Box", JOptionPane.INFORMATION_MESSAGE);
+                    }
 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Enter a Valid Name.","Suggestion Box",  JOptionPane.INFORMATION_MESSAGE);
                 }
-
-
-
 
             }
+
+
+
+
+
         });
 
 

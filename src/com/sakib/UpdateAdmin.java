@@ -182,53 +182,72 @@ public class UpdateAdmin {
                     String addresses= ob9.textField.getText();
 
 
+                    ValidatorSakib obv = new ValidatorSakib();
+                    if(obv.isValidName(names)==1 && !addresses.isEmpty() && !names.isEmpty() && !pass.isEmpty() && !genders.equals("")){
+                        if(obv.isValidEmail(user)==1){
+                            if(obv.isValidContact(contacts)==1){
+
+
+                                int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
+
+                                String EmpQuery = "UPDATE admin SET Name='"+names+"',Gender='"+genders+"',Contact='"+contacts+"',Address='"+addresses+"' WHERE Admin_ID='"+Admin_ID+"'";
+
+                                UserInfoSendStatus = ob2.SendData(EmpQuery);
+                                String pending = "Approved";
+
+                                String LoginQuery="";
+
+                                if(isFileUpdated==1){
+                                    profile_pics = contacts+f.getName();
+                                    LoginQuery = "UPDATE login SET Username='"+user+"',Password='"+pass+"',Profile_picture='"+profile_pics+"' WHERE Login_ID='"+Login_ID+"'";
+
+                                }
+                                else{
+                                    LoginQuery = "UPDATE login SET Username='"+user+"',Password='"+pass+"' WHERE Login_ID='"+Login_ID+"'";
+
+                                }
+
+
+                                LoginInfoSendStatus = ob2.SendData(LoginQuery);
+
+
+
+                                if(UserInfoSendStatus==1 && LoginInfoSendStatus==1){
+
+                                    if(isFileUpdated==1){
+                                        try {
+                                            File sourcefile = new File(filename);
+                                            File destfile =new File(saveDir+contacts+f.getName());
+                                            Files.copy(sourcefile.toPath(),destfile.toPath());
+                                        } catch (IOException ex) {
+                                            throw new RuntimeException(ex);
+                                        }
+                                    }
+
+
+                                    JOptionPane.showMessageDialog(null,"Your information is updated successfully. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
+
+                                }
 
 
 
 
-
-
-                    String address = ob9.textField.getText();
-                    int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
-
-                    String EmpQuery = "UPDATE admin SET Name='"+names+"',Gender='"+genders+"',Contact='"+contacts+"',Address='"+addresses+"' WHERE Admin_ID='"+Admin_ID+"'";
-
-                    UserInfoSendStatus = ob2.SendData(EmpQuery);
-                    String pending = "Approved";
-
-                    String LoginQuery="";
-
-                    if(isFileUpdated==1){
-                        profile_pics = contacts+f.getName();
-                        LoginQuery = "UPDATE login SET Username='"+user+"',Password='"+pass+"',Profile_picture='"+profile_pics+"' WHERE Login_ID='"+Login_ID+"'";
-
-                    }
-                    else{
-                        LoginQuery = "UPDATE login SET Username='"+user+"',Password='"+pass+"' WHERE Login_ID='"+Login_ID+"'";
-
-                    }
-
-
-                    LoginInfoSendStatus = ob2.SendData(LoginQuery);
-
-
-
-                    if(UserInfoSendStatus==1 && LoginInfoSendStatus==1){
-
-                        if(isFileUpdated==1){
-                            try {
-                                File sourcefile = new File(filename);
-                                File destfile =new File(saveDir+contacts+f.getName());
-                                Files.copy(sourcefile.toPath(),destfile.toPath());
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null,"Enter a Contact Number.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
+                        else{
+                            JOptionPane.showMessageDialog(null,"Enter a Valid email.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
+                        }
 
-
-                        JOptionPane.showMessageDialog(null,"Your information is updated successfully. Thank you.","Your Form is Submitted",JOptionPane.PLAIN_MESSAGE);
-
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Enter a Valid Name.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
                     }
+
+
+
+
 
 
 

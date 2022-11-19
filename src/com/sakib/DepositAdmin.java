@@ -49,70 +49,87 @@ public class DepositAdmin {
             ob2.button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    int acc_no = Integer.valueOf(ob3.textField.getText());
-                    int amount = Integer.valueOf(ob4.textField.getText());
-                    int user_ids=0;
 
-                    String namef="";
-                    int balance=0;
+                    ValidatorSakib obv= new ValidatorSakib();
 
-                    ResultSet rz = ob2.GetData("SELECT * FROM accounts WHERE Account_No='"+acc_no+"'");
+                    if(obv.isValidAmount(ob3.textField.getText())==1){
+                        if(obv.isValidAmount(ob4.textField.getText())==1){
 
 
-                    try{
-                        while(rz.next()){
-                            user_ids = Integer.valueOf(rz.getString("User_ID"));
-                            balance = Integer.valueOf(rz.getString("Balance"));
-                        }
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                            int acc_no = Integer.valueOf(ob3.textField.getText());
+                            int amount = Integer.valueOf(ob4.textField.getText());
+                            int user_ids=0;
 
-                    ResultSet rz2 = ob2.GetData("SELECT * FROM user WHERE User_ID='"+user_ids+"'");
+                            String namef="";
+                            int balance=0;
 
-                    try{
-                        while(rz2.next()){
-                            namef = rz2.getString("Name");
-                        }
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                            ResultSet rz = ob2.GetData("SELECT * FROM accounts WHERE Account_No='"+acc_no+"'");
 
-                    int check = JOptionPane.showConfirmDialog(null,"Are you sure to deposite the account - "+namef,"Confirm Deletion",JOptionPane.YES_NO_OPTION);
 
-                    if(check==0){
-                        balance=balance+amount;
-                        String tranCountQuery = "SELECT * FROM count_table";
-                        ResultSet rt = ob2.GetData(tranCountQuery);
-                        int transactionCount=0;
-                        try{
-                            while(rt.next()){
-                                transactionCount = Integer.valueOf(rt.getString("transaction"));
+                            try{
+                                while(rz.next()){
+                                    user_ids = Integer.valueOf(rz.getString("User_ID"));
+                                    balance = Integer.valueOf(rz.getString("Balance"));
+                                }
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
 
-                        String transactionQuery = "INSERT INTO transaction (Transaction_ID,Account_No,Date,Deposit,Withdraw,Available_Balance) VALUES('"+(startTransaction+transactionCount)+"','"+acc_no+"',curdate(),'"+amount+"',0,'"+balance+"')";
-                        int transactionStatus = ob2.SendData(transactionQuery);
-                        if(transactionStatus==1){
-                            String updateBalanceQuery = "UPDATE accounts SET Balance='"+balance+"' WHERE Account_No='"+acc_no+"'";
-                            int updateBalanceStatus = ob2.SendData(updateBalanceQuery);
-                            if(updateBalanceStatus==1){
-                                JOptionPane.showMessageDialog(null,"Transaction ID - "+(startTransaction+transactionCount),"Deposit Successful",JOptionPane.PLAIN_MESSAGE);
-                                String CountTranQuery = "UPDATE count_table SET transaction='"+(transactionCount+1)+"' WHERE count_id=1";
-                                int updateTranCountStatus = ob2.SendData(CountTranQuery);
-                                if(updateTranCountStatus==1){
-                                    ob1.scrollPane.setVisible(false);
-                                    String Query = "SELECT Account_No,A.User_ID,Name,Gender,Contact,Balance FROM accounts as A,user as U,login as l WHERE A.User_ID=U.User_ID AND A.User_ID=l.Identity_ID AND Status='Approved';";
-                                    ResultSet rz3 = ob1.GetData(Query);
-                                    ob1.CreateTable(50,140,1000,300,rz3);
-                                    dashWindow.mainpanel.add(ob1.scrollPane);
-                                    ob1.scrollPane.setVisible(true);
+                            ResultSet rz2 = ob2.GetData("SELECT * FROM user WHERE User_ID='"+user_ids+"'");
+
+                            try{
+                                while(rz2.next()){
+                                    namef = rz2.getString("Name");
+                                }
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            int check = JOptionPane.showConfirmDialog(null,"Are you sure to deposite the account - "+namef,"Confirm Deletion",JOptionPane.YES_NO_OPTION);
+
+                            if(check==0){
+                                balance=balance+amount;
+                                String tranCountQuery = "SELECT * FROM count_table";
+                                ResultSet rt = ob2.GetData(tranCountQuery);
+                                int transactionCount=0;
+                                try{
+                                    while(rt.next()){
+                                        transactionCount = Integer.valueOf(rt.getString("transaction"));
+                                    }
+                                } catch (SQLException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+
+                                String transactionQuery = "INSERT INTO transaction (Transaction_ID,Account_No,Date,Deposit,Withdraw,Available_Balance) VALUES('"+(startTransaction+transactionCount)+"','"+acc_no+"',curdate(),'"+amount+"',0,'"+balance+"')";
+                                int transactionStatus = ob2.SendData(transactionQuery);
+                                if(transactionStatus==1){
+                                    String updateBalanceQuery = "UPDATE accounts SET Balance='"+balance+"' WHERE Account_No='"+acc_no+"'";
+                                    int updateBalanceStatus = ob2.SendData(updateBalanceQuery);
+                                    if(updateBalanceStatus==1){
+                                        JOptionPane.showMessageDialog(null,"Transaction ID - "+(startTransaction+transactionCount),"Deposit Successful",JOptionPane.PLAIN_MESSAGE);
+                                        String CountTranQuery = "UPDATE count_table SET transaction='"+(transactionCount+1)+"' WHERE count_id=1";
+                                        int updateTranCountStatus = ob2.SendData(CountTranQuery);
+                                        if(updateTranCountStatus==1){
+                                            ob1.scrollPane.setVisible(false);
+                                            String Query = "SELECT Account_No,A.User_ID,Name,Gender,Contact,Balance FROM accounts as A,user as U,login as l WHERE A.User_ID=U.User_ID AND A.User_ID=l.Identity_ID AND Status='Approved';";
+                                            ResultSet rz3 = ob1.GetData(Query);
+                                            ob1.CreateTable(50,140,1000,300,rz3);
+                                            dashWindow.mainpanel.add(ob1.scrollPane);
+                                            ob1.scrollPane.setVisible(true);
+                                        }
+                                    }
                                 }
                             }
+
+
+                        }else{
+                            JOptionPane.showMessageDialog(null,"Enter Valid Amount","Information Alert",JOptionPane.INFORMATION_MESSAGE);
                         }
+
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Enter Valid Account No","Information Alert",JOptionPane.INFORMATION_MESSAGE);
                     }
+
 
                 }
             });

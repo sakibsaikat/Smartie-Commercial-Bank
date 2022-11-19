@@ -42,7 +42,19 @@ public class BankFinance {
             newPanel.setBounds(0,330,900,100);
             newPanel.setBackground(ob2.darkBack);
 
-            JLabel label = new JLabel("Total Amount: 12,45,43,435",SwingConstants.CENTER);
+            CustomModelSakib obx = new CustomModelSakib();
+            ResultSet rz = obx.GetData("SELECT SUM(Balance) AS BL FROM accounts");
+            String total_bal = "";
+
+            try{
+                while(rz.next()){
+                    total_bal = rz.getString("BL");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            JLabel label = new JLabel("Total Amount: "+total_bal+" Tk",SwingConstants.CENTER);
             label.setFont(ob2.customFont3);
             label.setForeground(Color.WHITE);
 

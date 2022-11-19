@@ -181,14 +181,26 @@ public class UpdateEmployee {
                     String genders= ob8.textField.getText();
                     String addresses= ob9.textField.getText();
 
+                    ValidatorSakib obv = new ValidatorSakib();
+                    if(obv.isValidName(names)==1 && !addresses.isEmpty() && !names.isEmpty() && !pass.isEmpty() && !genders.equals("")){
+                        if(obv.isValidEmail(user)==1){
+                            if(obv.isValidContact(contacts)==1){
+
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null,"Enter a Contact Number.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null,"Enter a Valid email.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Enter a Valid Name.","Suggestion Box",JOptionPane.INFORMATION_MESSAGE);
+                    }
 
 
 
-
-
-
-
-                    String address = ob9.textField.getText();
                     int UserInfoSendStatus=0,LoginInfoSendStatus=0,AccountInfoSendInfo=0;
 
                     String EmpQuery = "UPDATE employee SET Name='"+names+"',Gender='"+genders+"',Contact='"+contacts+"',Address='"+addresses+"' WHERE Employee_ID='"+Emp_ID+"'";
